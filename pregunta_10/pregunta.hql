@@ -29,14 +29,6 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
-DROP TABLE IF EXISTS pregunta;
-CREATE TABLE pregunta 
-AS 
-        SELECT key,value
-        FROM t0
-        LATERAL VIEW EXPLODE(c3) word;
-INSERT OVERWRITE LOCAL DIRECTORY './output'
+INSERT OVERWRITE DIRECTORY 'output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-SELECT key,count(1)
-FROM pregunta
-GROUP BY key;
+SELECT letra, COUNT(valor) FROM t0 LATERAL VIEW EXPLODE(c3) t0 AS letra, valor GROUP BY letra;

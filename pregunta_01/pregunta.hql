@@ -13,30 +13,12 @@ Escriba el resultado a la carpeta `output` de directorio de trabajo.
 
         >>> Escriba su respuesta a partir de este punto <<<
 */
-*/
-DROP TABLE IF EXISTS data;
-DROP TABLE IF EXISTS counter;
 
-CREATE TABLE data 
-        (letter STRING,
-        dates DATE,
-        number INT)
+CREATE TABLE data (letra STRING, fecha DATE, valor INT)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 TBLPROPERTIES ("skip.header.line.count"="0");
 LOAD DATA LOCAL INPATH "data.tsv" OVERWRITE INTO TABLE data;
-CREATE TABLE counter 
-AS 
-        SELECT 
-                letter, count(1) AS count 
-        FROM 
-                data 
-        GROUP BY 
-                letter 
-        ORDER BY 
-                letter;
+CREATE TABLE word_counts AS SELECT letra, COUNT(1) AS cantidad FROM data GROUP BY letra ORDER BY letra;
 INSERT OVERWRITE LOCAL DIRECTORY './output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-SELECT 
-        * 
-FROM 
-        counter;
+SELECT * FROM word_counts;

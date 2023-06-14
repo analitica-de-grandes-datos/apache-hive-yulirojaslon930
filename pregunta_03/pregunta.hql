@@ -15,24 +15,7 @@ Escriba el resultado a la carpeta `output` de directorio de trabajo.
 */
 
 
-DROP TABLE IF EXISTS data;
-DROP TABLE IF EXISTS pregunta;
-CREATE TABLE data 
-        (letter STRING,
-        dates DATE,
-        number INT)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
-TBLPROPERTIES ("skip.header.line.count"="0");
+CREATE TABLE data (letra STRING, fecha DATE, valor INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' TBLPROPERTIES ("skip.header.line.count"="0");
 LOAD DATA LOCAL INPATH "data.tsv" OVERWRITE INTO TABLE data;
-CREATE TABLE pregunta 
-AS 
-        SELECT DISTINCT number
-        FROM data 
-        ORDER BY number
-        LIMIT 5;
-INSERT OVERWRITE LOCAL DIRECTORY './output'
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-SELECT 
-        *
-FROM 
-        pregunta;
+CREATE TABLE word_counts9 AS SELECT valor, count(1) FROM data GROUP BY valor order by valor;
+INSERT OVERWRITE LOCAL DIRECTORY './output' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' SELECT valor FROM word_counts9 order by valor limit 5;

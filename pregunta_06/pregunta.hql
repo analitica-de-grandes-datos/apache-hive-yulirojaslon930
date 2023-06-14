@@ -11,7 +11,6 @@ Apache Hive se ejecutará en modo local (sin HDFS).
 Escriba el resultado a la carpeta `output` de directorio de trabajo.
 
 */
-
 DROP TABLE IF EXISTS tbl0;
 CREATE TABLE tbl0 (
     c1 INT,
@@ -45,12 +44,6 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
-DROP TABLE IF EXISTS pregunta;
-CREATE TABLE pregunta 
-AS 
-        SELECT UPPER(CONCAT_WS(':',c5))
-        FROM tbl0;
-INSERT OVERWRITE LOCAL DIRECTORY './output'
+INSERT OVERWRITE DIRECTORY 'output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-SELECT *
-FROM pregunta;
+SELECT concat_ws(':',collect_list(UPPER(list))) FROM tbl0 LATERAL VIEW explode(c5) result AS list GROUP BY c1;

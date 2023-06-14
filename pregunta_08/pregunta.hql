@@ -12,7 +12,6 @@ Apache Hive se ejecutará en modo local (sin HDFS).
 Escriba el resultado a la carpeta `output` de directorio de trabajo.
 
 */
-
 DROP TABLE IF EXISTS tbl0;
 CREATE TABLE tbl0 (
     c1 INT,
@@ -46,14 +45,6 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
-DROP TABLE IF EXISTS pregunta;
-CREATE TABLE pregunta 
-AS 
-        SELECT c2 as letter, numbers
-        FROM tbl0
-        LATERAL VIEW EXPLODE(MAP_VALUES(c6)) tbl0 AS numbers;
-INSERT OVERWRITE LOCAL DIRECTORY './output'
+INSERT OVERWRITE DIRECTORY 'output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-SELECT letter, SUM(numbers)
-FROM pregunta
-GROUP BY letter;
+SELECT c2, sum(valor) FROM tbl0 LATERAL VIEW explode(c6) adTable AS clave, valor GROUP BY c2;
