@@ -11,7 +11,6 @@ Apache Hive se ejecutará en modo local (sin HDFS).
 Escriba el resultado a la carpeta `output` de directorio de trabajo.
 
 */
-
 DROP TABLE IF EXISTS tbl0;
 CREATE TABLE tbl0 (
     c1 INT,
@@ -45,4 +44,6 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
-
+INSERT OVERWRITE DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT tbl0.c1, tbl0.c2 , tbl1.c4[tbl0.c2] FROM tbl0 JOIN tbl1 on tbl0.c1 = tbl1.c1 ORDER BY tbl0.c1;

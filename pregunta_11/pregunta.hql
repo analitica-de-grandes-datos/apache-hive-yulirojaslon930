@@ -12,6 +12,7 @@ Escriba el resultado a la carpeta `output` de directorio de trabajo.
 
 */
 
+
 DROP TABLE IF EXISTS t0;
 CREATE TABLE t0 (
     c1 STRING,
@@ -28,4 +29,6 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
-
+INSERT OVERWRITE DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT c1 , SIZE(c2), SIZE(c3) FROM t0;
